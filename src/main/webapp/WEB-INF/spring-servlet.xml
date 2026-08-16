@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+
+           http://www.springframework.org/schema/mvc
+           http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+
+    <!-- ========================================================= -->
+    <!-- CONTROLLER COMPONENT SCANNING -->
+    <!-- ========================================================= -->
+
+    <context:component-scan
+            base-package="com.crimsonlogic.mutualfundinvestmentspringmvc.controller"/>
+
+    <mvc:annotation-driven/>
+
+
+    <!-- ========================================================= -->
+    <!-- VIEW RESOLVER -->
+    <!-- ========================================================= -->
+
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+
+        <property name="prefix"
+                  value="/WEB-INF/views/"/>
+
+        <property name="suffix"
+                  value=".jsp"/>
+
+    </bean>
+
+
+    <!-- ========================================================= -->
+    <!-- DATASOURCE -->
+    <!-- ========================================================= -->
+
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+
+        <property name="driverClassName"
+                  value="com.mysql.cj.jdbc.Driver"/>
+
+        <property name="url"
+                  value="jdbc:mysql://localhost:3306/mutualfundinvestment"/>
+
+        <property name="username"
+                  value="root"/>
+
+        <property name="password"
+                  value="pernstack"/>
+
+    </bean>
+
+
+    <!-- ========================================================= -->
+    <!-- MYBATIS SQL SESSION FACTORY -->
+    <!-- ========================================================= -->
+
+    <bean id="sqlSessionFactory"
+          class="org.mybatis.spring.SqlSessionFactoryBean">
+
+        <property name="dataSource"
+                  ref="dataSource"/>
+
+        <property name="mapperLocations"
+                  value="classpath:mappers/*.xml"/>
+
+    </bean>
+
+
+    <!-- ========================================================= -->
+    <!-- MYBATIS MAPPER SCANNER -->
+    <!-- ========================================================= -->
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+
+        <property name="basePackage"
+                  value="com.crimsonlogic.mutualfundinvestmentspringmvc.dao"/>
+
+        <property name="sqlSessionFactory"
+                  ref="sqlSessionFactory"/>
+
+    </bean>
+
+    <bean id="sipMapper"
+          class="org.mybatis.spring.mapper.MapperFactoryBean">
+
+        <property name="mapperInterface"
+                  value="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.SIPMapper"/>
+
+        <property name="sqlSessionFactory"
+                  ref="sqlSessionFactory"/>
+
+    </bean>
+
+
+    <!-- ========================================================= -->
+    <!-- ADMIN SERVICE -->
+    <!-- ========================================================= -->
+
+    <bean id="adminService"
+          class="com.crimsonlogic.mutualfundinvestmentspringmvc.services.admin.AdminService">
+
+        <property name="adminMapper"
+                  ref="adminMapper"/>
+
+        <property name="userMapper"
+                  ref="userMapper"/>
+
+    </bean>
+
+
+    <!-- ========================================================= -->
+    <!-- PORTFOLIO SERVICE -->
+    <!-- ========================================================= -->
+
+    <bean id="portfolioService"
+          class="com.crimsonlogic.mutualfundinvestmentspringmvc.services.portfolio.PortfolioService">
+
+        <property name="portfolioMapper"
+                  ref="portfolioMapper"/>
+
+        <property name="investorMapper"
+                  ref="investorMapper"/>
+
+    </bean>
+
+
+    <!-- ========================================================= -->
+    <!-- INVESTOR SERVICE -->
+    <!-- ========================================================= -->
+
+    <bean id="investorService"
+          class="com.crimsonlogic.mutualfundinvestmentspringmvc.services.investor.InvestorService">
+
+        <property name="investorMapper"
+                  ref="investorMapper"/>
+
+        <property name="userMapper"
+                  ref="userMapper"/>
+
+        <property name="nomineeMapper"
+                  ref="nomineeMapper"/>
+
+        <property name="portfolioService"
+                  ref="portfolioService"/>
+
+    </bean>
+
+
+    <!-- ========================================================= -->
+    <!-- TRANSACTION SERVICE -->
+    <!-- ========================================================= -->
+
+    <bean id="transactionService"
+          class="com.crimsonlogic.mutualfundinvestmentspringmvc.services.transaction.TransactionService">
+
+        <property name="transactionMapper"
+                  ref="transactionMapper"/>
+
+    </bean>
+
+
+    <!-- ========================================================= -->
+    <!-- PAYMENT SERVICE -->
+    <!-- ========================================================= -->
+
+    <bean id="paymentService"
+          class="com.crimsonlogic.mutualfundinvestmentspringmvc.services.payment.PaymentService"/>
+
+
+    <!-- ========================================================= -->
+    <!-- HOLDING SERVICE -->
+    <!-- ========================================================= -->
+
+    <bean id="holdingService"
+          class="com.crimsonlogic.mutualfundinvestmentspringmvc.services.holding.HoldingService">
+
+        <property name="holdingMapper"
+                  ref="holdingMapper"/>
+
+    </bean>
+
+
+    <!-- ========================================================= -->
+    <!-- MUTUAL FUND SERVICE -->
+    <!-- ========================================================= -->
+
+    <bean id="mutualFundService"
+          class="com.crimsonlogic.mutualfundinvestmentspringmvc.services.mutualfund.MutualFundService">
+
+        <property name="mutualFundMapper"
+                  ref="mutualFundMapper"/>
+
+        <property name="navHistoryMapper"
+                  ref="NAVHistoryMapper"/>
+
+    </bean>
+
+
+    <!-- ========================================================= -->
+    <!-- NAV HISTORY SERVICE -->
+    <!-- ========================================================= -->
+
+    <bean id="navHistoryService"
+          class="com.crimsonlogic.mutualfundinvestmentspringmvc.services.navhistory.NAVHistoryService">
+
+        <property name="navHistoryMapper"
+                  ref="NAVHistoryMapper"/>
+
+    </bean>
+
+
+    <!-- ========================================================= -->
+    <!-- INVESTMENT SERVICE -->
+    <!-- ========================================================= -->
+
+    <bean id="investmentService"
+          class="com.crimsonlogic.mutualfundinvestmentspringmvc.services.investment.InvestmentService">
+
+        <property name="investmentMapper"
+                  ref="investmentMapper"/>
+
+        <property name="investorService"
+                  ref="investorService"/>
+
+        <property name="mutualFundService"
+                  ref="mutualFundService"/>
+
+        <property name="paymentService"
+                  ref="paymentService"/>
+
+        <property name="transactionService"
+                  ref="transactionService"/>
+
+        <property name="holdingService"
+                  ref="holdingService"/>
+
+        <property name="portfolioService"
+                  ref="portfolioService"/>
+
+    </bean>
+
+    <!-- ========================================================= -->
+    <!-- SIP SERVICE -->
+    <!-- ========================================================= -->
+
+    <bean id="sipService"
+          class="com.crimsonlogic.mutualfundinvestmentspringmvc.services.sip.SIPService">
+
+        <property name="sipMapper"
+                  ref="sipMapper"/>
+
+        <property name="investorService"
+                  ref="investorService"/>
+
+        <property name="mutualFundService"
+                  ref="mutualFundService"/>
+
+        <property name="paymentService"
+                  ref="paymentService"/>
+
+        <property name="transactionService"
+                  ref="transactionService"/>
+
+        <property name="holdingService"
+                  ref="holdingService"/>
+
+        <property name="portfolioService"
+                  ref="portfolioService"/>
+
+    </bean>
+
+
+
+
+</beans>

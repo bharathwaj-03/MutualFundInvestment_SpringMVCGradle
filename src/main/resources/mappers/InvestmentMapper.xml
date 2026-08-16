@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.InvestmentMapper">
+
+    <!-- ========================================================= -->
+    <!-- RESULT MAP -->
+    <!-- ========================================================= -->
+
+    <resultMap id="investmentResult"
+               type="com.crimsonlogic.mutualfundinvestmentspringmvc.model.financeactivity.Investment">
+
+        <id property="investmentId"
+            column="investment_id"/>
+
+        <result property="amount"
+                column="amount"/>
+
+        <result property="unitsPurchased"
+                column="units_purchased"/>
+
+        <result property="activityDate"
+                column="activity_date"/>
+
+        <result property="investmentYears"
+                column="investment_years"/>
+
+        <result property="assetGainPerYear"
+                column="asset_gain_per_year"/>
+
+        <result property="assetGainTotalInvestedYears"
+                column="asset_gain_total_invested_years"/>
+
+        <!-- ================================================= -->
+        <!-- HAS-A Investor -->
+        <!-- ================================================= -->
+
+        <association property="investor"
+                     javaType="com.crimsonlogic.mutualfundinvestmentspringmvc.model.user.Investor"
+                     select="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.Investordao.getInvestorByUserId"
+                     column="user_id"/>
+
+        <!-- ================================================= -->
+        <!-- HAS-A MutualFund -->
+        <!-- ================================================= -->
+
+        <association property="mutualFund"
+                     javaType="com.crimsonlogic.mutualfundinvestmentspringmvc.model.abstraction.MutualFund"
+                     select="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.MutualFunddao.getFundById"
+                     column="fund_id"/>
+
+    </resultMap>
+
+    <!-- ========================================================= -->
+    <!-- INSERT -->
+    <!-- ========================================================= -->
+
+    <insert id="insertInvestment">
+
+        INSERT INTO investment
+        (
+        investment_id,
+        user_id,
+        fund_id,
+        amount,
+        units_purchased,
+        activity_date,
+        investment_years,
+        asset_gain_per_year,
+        asset_gain_total_invested_years
+        )
+
+        VALUES
+        (
+        #{investmentId},
+        #{investor.userId},
+        #{mutualFund.fundId},
+        #{amount},
+        #{unitsPurchased},
+        #{activityDate},
+        #{investmentYears},
+        #{assetGainPerYear},
+        #{assetGainTotalInvestedYears}
+        )
+
+    </insert>
+
+    <!-- ========================================================= -->
+    <!-- UPDATE -->
+    <!-- ========================================================= -->
+
+    <update id="updateInvestment">
+
+        UPDATE investment
+
+        SET
+
+        amount=#{amount},
+
+        units_purchased=#{unitsPurchased},
+
+        activity_date=#{activityDate},
+
+        investment_years=#{investmentYears},
+
+        asset_gain_per_year=#{assetGainPerYear},
+
+        asset_gain_total_invested_years=#{assetGainTotalInvestedYears}
+
+        WHERE investment_id=#{investmentId}
+
+    </update>
+
+    <!-- ========================================================= -->
+    <!-- DELETE -->
+    <!-- ========================================================= -->
+
+    <delete id="deleteInvestment">
+
+        DELETE
+
+        FROM investment
+
+        WHERE investment_id=#{investmentId}
+
+    </delete>
+
+    <!-- ========================================================= -->
+    <!-- SEARCH BY ID -->
+    <!-- ========================================================= -->
+
+    <select id="getInvestmentById"
+            resultMap="investmentResult">
+
+        SELECT *
+
+        FROM investment
+
+        WHERE investment_id=#{investmentId}
+
+    </select>
+
+    <!-- ========================================================= -->
+    <!-- SEARCH BY USER -->
+    <!-- ========================================================= -->
+
+    <select id="getInvestmentsByUser"
+            resultMap="investmentResult">
+
+        SELECT *
+
+        FROM investment
+
+        WHERE user_id=#{userId}
+
+        ORDER BY activity_date DESC
+
+    </select>
+
+    <!-- ========================================================= -->
+    <!-- SEARCH BY FUND -->
+    <!-- ========================================================= -->
+
+    <select id="getInvestmentsByFundId"
+            resultMap="investmentResult">
+
+        SELECT *
+
+        FROM investment
+
+        WHERE fund_id=#{fundId}
+
+        ORDER BY activity_date DESC
+
+    </select>
+
+    <!-- ========================================================= -->
+    <!-- GET ALL -->
+    <!-- ========================================================= -->
+
+    <select id="getAllInvestments"
+            resultMap="investmentResult">
+
+        SELECT *
+
+        FROM investment
+
+        ORDER BY activity_date DESC
+
+    </select>
+
+</mapper>

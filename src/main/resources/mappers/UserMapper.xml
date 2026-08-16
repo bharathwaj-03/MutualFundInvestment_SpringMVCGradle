@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.UserMapper">
+
+    <resultMap id="userResult"
+               type="com.crimsonlogic.mutualfundinvestmentspringmvc.model.abstraction.User">
+
+        <id property="userId"
+            column="user_id"/>
+
+        <result property="name"
+                column="name"/>
+
+        <result property="email"
+                column="email"/>
+
+        <result property="phoneNumber"
+                column="phone_number"/>
+
+        <result property="password"
+                column="password"/>
+
+        <discriminator javaType="String"
+                       column="user_role">
+
+            <case value="ADMIN"
+                  resultMap="adminUserResult"/>
+
+            <case value="INVESTOR"
+                  resultMap="investorUserResult"/>
+
+        </discriminator>
+
+    </resultMap>
+
+    <resultMap id="adminUserResult"
+               type="com.crimsonlogic.mutualfundinvestmentspringmvc.model.user.Admin"
+               extends="userResult">
+
+        <result property="adminCode"
+                column="admin_code"/>
+
+        <result property="createdDate"
+                column="created_date"/>
+
+    </resultMap>
+    <resultMap id="investorUserResult"
+               type="com.crimsonlogic.mutualfundinvestmentspringmvc.model.user.Investor"
+               extends="userResult">
+
+        <result property="panNumber"
+                column="pan_number"/>
+
+        <result property="registrationDate"
+                column="registration_date"/>
+
+        <result property="riskProfile"
+                column="risk_profile"/>
+
+        <result property="active"
+                column="active"/>
+
+    </resultMap>
+
+    <insert id="insertUser">
+
+        INSERT INTO user
+        (
+        user_id,
+        name,
+        email,
+        phone_number,
+        password,
+        user_role
+        )
+
+        VALUES
+        (
+        #{userId},
+        #{name},
+        #{email},
+        #{phoneNumber},
+        #{password},
+        #{userRole}
+        )
+
+    </insert>
+
+    <select id="authenticateUser"
+            resultMap="userResult">
+
+        SELECT *
+        FROM user
+        WHERE user_id = #{userId}
+        AND password = #{password}
+        AND user_role = #{role}
+
+    </select>
+
+    <select id="getUserById"
+            resultMap="userResult">
+
+        SELECT *
+
+        FROM user
+
+        WHERE user_id=#{userId}
+
+    </select>
+
+</mapper>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.SIPMapper">
+
+    <!-- ========================================================= -->
+    <!-- RESULT MAP -->
+    <!-- ========================================================= -->
+
+    <resultMap id="sipResult"
+               type="com.crimsonlogic.mutualfundinvestmentspringmvc.model.financeactivity.SIP">
+
+        <id property="sipId"
+            column="sip_id"/>
+
+        <result property="monthlyAmount"
+                column="monthly_amount"/>
+
+        <result property="unitsPurchased"
+                column="units_purchased"/>
+
+        <result property="activityDate"
+                column="activity_date"/>
+
+        <result property="startDate"
+                column="start_date"/>
+
+        <result property="nextInstallmentDate"
+                column="next_installment_date"/>
+
+        <result property="investmentYears"
+                column="investment_years"/>
+
+        <result property="assetGainPerYear"
+                column="asset_gain_per_year"/>
+
+        <result property="assetGainTotalInvestedYears"
+                column="asset_gain_total_invested_years"/>
+
+        <result property="sipStatus"
+                column="sip_status"/>
+
+        <!-- ===================== -->
+        <!-- Investor Association -->
+        <!-- ===================== -->
+
+        <association property="investor"
+                     javaType="com.crimsonlogic.mutualfundinvestmentspringmvc.model.user.Investor"
+                     select="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.Investordao.getInvestorByUserId"
+                     column="user_id"/>
+
+        <!-- ===================== -->
+        <!-- MutualFund Association -->
+        <!-- ===================== -->
+
+        <association property="mutualFund"
+                     javaType="com.crimsonlogic.mutualfundinvestmentspringmvc.model.abstraction.MutualFund"
+                     select="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.MutualFunddao.getFundById"
+                     column="fund_id"/>
+
+    </resultMap>
+
+    <!-- ========================================================= -->
+    <!-- INSERT -->
+    <!-- ========================================================= -->
+
+    <insert id="insertSIP">
+
+        INSERT INTO sip
+        (
+        sip_id,
+        user_id,
+        fund_id,
+        monthly_amount,
+        units_purchased,
+        activity_date,
+        start_date,
+        next_installment_date,
+        investment_years,
+        asset_gain_per_year,
+        asset_gain_total_invested_years,
+        sip_status
+        )
+
+        VALUES
+        (
+        #{sipId},
+        #{investor.userId},
+        #{mutualFund.fundId},
+        #{monthlyAmount},
+        #{unitsPurchased},
+        #{activityDate},
+        #{startDate},
+        #{nextInstallmentDate},
+        #{investmentYears},
+        #{assetGainPerYear},
+        #{assetGainTotalInvestedYears},
+        #{sipStatus}
+        )
+
+    </insert>
+
+    <!-- ========================================================= -->
+    <!-- UPDATE -->
+    <!-- ========================================================= -->
+
+    <update id="updateSIP">
+
+        UPDATE sip
+
+        SET
+
+        monthly_amount=#{monthlyAmount},
+
+        units_purchased=#{unitsPurchased},
+
+        activity_date=#{activityDate},
+
+        start_date=#{startDate},
+
+        next_installment_date=#{nextInstallmentDate},
+
+        investment_years=#{investmentYears},
+
+        asset_gain_per_year=#{assetGainPerYear},
+
+        asset_gain_total_invested_years=#{assetGainTotalInvestedYears},
+
+        sip_status=#{sipStatus}
+
+        WHERE sip_id=#{sipId}
+
+    </update>
+
+    <!-- ========================================================= -->
+    <!-- DELETE -->
+    <!-- ========================================================= -->
+
+    <delete id="deleteSIP">
+
+        DELETE
+
+        FROM sip
+
+        WHERE sip_id=#{sipId}
+
+    </delete>
+
+    <!-- ========================================================= -->
+    <!-- GET SIP BY ID -->
+    <!-- ========================================================= -->
+
+    <select id="getSIPById"
+            resultMap="sipResult">
+
+        SELECT *
+
+        FROM sip
+
+        WHERE sip_id=#{sipId}
+
+    </select>
+
+    <!-- ========================================================= -->
+    <!-- GET SIPS OF INVESTOR -->
+    <!-- ========================================================= -->
+
+    <select id="getSIPsByUserId"
+            resultMap="sipResult">
+
+        SELECT *
+
+        FROM sip
+
+        WHERE user_id=#{userId}
+
+        ORDER BY next_installment_date
+
+    </select>
+
+    <!-- ========================================================= -->
+    <!-- GET ALL SIPS -->
+    <!-- ========================================================= -->
+
+    <select id="getAllSIPs"
+            resultMap="sipResult">
+
+        SELECT *
+
+        FROM sip
+
+        ORDER BY activity_date DESC
+
+    </select>
+
+</mapper>

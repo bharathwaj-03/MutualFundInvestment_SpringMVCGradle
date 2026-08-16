@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.InvestorMapper">
+
+
+    <!-- ========================================================= -->
+    <!-- RESULT MAP -->
+    <!-- ========================================================= -->
+
+    <resultMap id="investorResult"
+               type="com.crimsonlogic.mutualfundinvestmentspringmvc.model.user.Investor">
+
+        <!-- USER TABLE -->
+        <id property="userId"
+            column="user_id"/>
+
+        <result property="name"
+                column="name"/>
+
+        <result property="email"
+                column="email"/>
+
+        <result property="phoneNumber"
+                column="phone_number"/>
+
+        <result property="password"
+                column="password"/>
+
+        <result property="userRole"
+                column="user_role"/>
+
+
+        <!-- INVESTOR TABLE -->
+
+        <result property="panNumber"
+                column="pan_number"/>
+
+        <result property="registrationDate"
+                column="registration_date"/>
+
+        <result property="riskProfile"
+                column="risk_profile"/>
+
+        <result property="active"
+                column="active"/>
+
+
+        <!-- NOMINEE -->
+
+        <association property="nominee"
+                     javaType="com.crimsonlogic.mutualfundinvestmentspringmvc.model.user.Nominee"
+                     select="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.NomineeMapper.getNomineeById"
+                     column="nominee_id"/>
+
+    </resultMap>
+
+
+
+    <!-- ========================================================= -->
+    <!-- AUTHENTICATE INVESTOR -->
+    <!-- ========================================================= -->
+
+    <select id="authenticateInvestor"
+            resultMap="investorResult">
+
+        SELECT
+        u.user_id,
+        u.name,
+        u.email,
+        u.phone_number,
+        u.password,
+        u.user_role,
+
+        i.pan_number,
+        i.registration_date,
+        i.risk_profile,
+        i.active,
+        i.nominee_id
+
+        FROM user u
+
+        INNER JOIN investor i
+        ON u.user_id = i.user_id
+
+        WHERE u.user_id = #{userId}
+
+        AND u.password = #{password}
+
+        AND u.user_role = #{role}
+
+    </select>
+
+
+
+    <!-- ========================================================= -->
+    <!-- INSERT INVESTOR -->
+    <!-- ========================================================= -->
+
+    <insert id="insertInvestor">
+
+        INSERT INTO investor
+        (
+        user_id,
+        pan_number,
+        registration_date,
+        risk_profile,
+        active,
+        nominee_id
+        )
+
+        VALUES
+        (
+        #{userId},
+        #{panNumber},
+        #{registrationDate},
+        #{riskProfile},
+        #{active},
+        #{nominee.nomineeId}
+        )
+
+    </insert>
+
+
+
+    <!-- ========================================================= -->
+    <!-- GET INVESTOR BY USER ID -->
+    <!-- ========================================================= -->
+
+    <select id="getInvestorByUserId"
+            resultMap="investorResult">
+
+        SELECT
+        u.user_id,
+        u.name,
+        u.email,
+        u.phone_number,
+        u.password,
+        u.user_role,
+
+        i.pan_number,
+        i.registration_date,
+        i.risk_profile,
+        i.active,
+        i.nominee_id
+
+        FROM user u
+
+        INNER JOIN investor i
+        ON u.user_id = i.user_id
+
+        WHERE u.user_id = #{userId}
+
+    </select>
+
+
+
+    <!-- ========================================================= -->
+    <!-- GET ALL INVESTORS -->
+    <!-- ========================================================= -->
+
+    <select id="getAllInvestors"
+            resultMap="investorResult">
+
+        SELECT
+        u.user_id,
+        u.name,
+        u.email,
+        u.phone_number,
+        u.password,
+        u.user_role,
+
+        i.pan_number,
+        i.registration_date,
+        i.risk_profile,
+        i.active,
+        i.nominee_id
+
+        FROM user u
+
+        INNER JOIN investor i
+        ON u.user_id = i.user_id
+
+        WHERE u.user_role = 'INVESTOR'
+
+    </select>
+
+
+
+    <!-- ========================================================= -->
+    <!-- UPDATE INVESTOR PASSWORD -->
+    <!-- ========================================================= -->
+
+    <update id="updateInvestorPassword">
+
+        UPDATE user
+
+        SET password = #{password}
+
+        WHERE user_id = #{userId}
+
+    </update>
+
+
+
+    <!-- ========================================================= -->
+    <!-- UPDATE INVESTOR RISK PROFILE -->
+    <!-- ========================================================= -->
+
+    <update id="updateInvestorRiskProfile">
+
+        UPDATE investor
+
+        SET risk_profile = #{riskProfile}
+
+        WHERE user_id = #{userId}
+
+    </update>
+
+
+</mapper>

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.TransactionMapper">
+
+    <!-- ========================================================= -->
+    <!-- RESULT MAP -->
+    <!-- ========================================================= -->
+
+    <resultMap id="transactionResult"
+               type="com.crimsonlogic.mutualfundinvestmentspringmvc.model.abstraction.Transaction">
+
+        <id property="transactionId"
+            column="transaction_id"/>
+
+        <result property="amount"
+                column="amount"/>
+
+        <result property="transactionType"
+                column="transaction_type"/>
+
+        <result property="transactionStatus"
+                column="transaction_status"/>
+
+        <result property="transactionDateTime"
+                column="transaction_datetime"/>
+
+        <!-- ========================= -->
+        <!-- Investor Association -->
+        <!-- ========================= -->
+
+        <association property="investor"
+                     javaType="com.crimsonlogic.mutualfundinvestmentspringmvc.model.user.Investor"
+                     select="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.Investordao.getInvestorByUserId"
+                     column="user_id"/>
+
+        <!-- ========================= -->
+        <!-- MutualFund Association -->
+        <!-- ========================= -->
+
+        <association property="mutualFund"
+                     javaType="com.crimsonlogic.mutualfundinvestmentspringmvc.model.abstraction.MutualFund"
+                     select="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.MutualFunddao.getFundById"
+                     column="fund_id"/>
+
+        <!-- ========================= -->
+        <!-- DISCRIMINATOR -->
+        <!-- ========================= -->
+
+        <discriminator javaType="String"
+                       column="transaction_type">
+
+            <case value="BUY"
+                  resultMap="purchaseTransactionResult"/>
+
+            <case value="SIP"
+                  resultMap="sipTransactionResult"/>
+
+        </discriminator>
+
+    </resultMap>
+
+    <resultMap id="purchaseTransactionResult"
+               type="com.crimsonlogic.mutualfundinvestmentspringmvc.model.transaction.BuyTransaction"
+               extends="transactionResult"/>
+
+    <resultMap id="sipTransactionResult"
+               type="com.crimsonlogic.mutualfundinvestmentspringmvc.model.transaction.SIPTransaction"
+               extends="transactionResult"/>
+
+    <!-- ========================================================= -->
+    <!-- INSERT -->
+    <!-- ========================================================= -->
+
+    <insert id="insertTransaction">
+
+        INSERT INTO transaction
+        (
+        transaction_id,
+        user_id,
+        fund_id,
+        amount,
+        transaction_type,
+        transaction_status,
+        transaction_datetime
+        )
+
+        VALUES
+        (
+        #{transactionId},
+        #{investor.userId},
+        #{mutualFund.fundId},
+        #{amount},
+        #{transactionType},
+        #{transactionStatus},
+        #{transactionDateTime}
+        )
+
+    </insert>
+
+    <!-- ========================================================= -->
+    <!-- UPDATE -->
+    <!-- ========================================================= -->
+
+    <update id="updateTransaction">
+
+        UPDATE transaction
+
+        SET
+
+        amount=#{amount},
+
+        transaction_type=#{transactionType},
+
+        transaction_status=#{transactionStatus},
+
+        transaction_datetime=#{transactionDateTime}
+
+        WHERE transaction_id=#{transactionId}
+
+    </update>
+
+    <!-- ========================================================= -->
+    <!-- DELETE -->
+    <!-- ========================================================= -->
+
+    <delete id="deleteTransaction">
+
+        DELETE
+
+        FROM transaction
+
+        WHERE transaction_id=#{transactionId}
+
+    </delete>
+
+    <!-- ========================================================= -->
+    <!-- SEARCH BY ID -->
+    <!-- ========================================================= -->
+
+    <select id="getTransactionById"
+            resultMap="transactionResult">
+
+        SELECT *
+
+        FROM transaction
+
+        WHERE transaction_id=#{transactionId}
+
+    </select>
+
+    <!-- ========================================================= -->
+    <!-- SEARCH BY USER -->
+    <!-- ========================================================= -->
+
+    <select id="getTransactionsByUserId"
+            resultMap="transactionResult">
+
+        SELECT *
+
+        FROM transaction
+
+        WHERE user_id=#{userId}
+
+        ORDER BY transaction_datetime DESC
+
+    </select>
+
+    <!-- ========================================================= -->
+    <!-- SEARCH BY FUND -->
+    <!-- ========================================================= -->
+
+    <select id="getTransactionsByFundId"
+            resultMap="transactionResult">
+
+        SELECT *
+
+        FROM transaction
+
+        WHERE fund_id=#{fundId}
+
+        ORDER BY transaction_datetime DESC
+
+    </select>
+
+    <!-- ========================================================= -->
+    <!-- LATEST TRANSACTION -->
+    <!-- ========================================================= -->
+
+    <select id="getLatestTransaction"
+            resultMap="transactionResult">
+
+        SELECT *
+
+        FROM transaction
+
+        ORDER BY transaction_datetime DESC
+
+        LIMIT 1
+
+    </select>
+
+    <!-- ========================================================= -->
+    <!-- GET ALL -->
+    <!-- ========================================================= -->
+
+    <select id="getAllTransactions"
+            resultMap="transactionResult">
+
+        SELECT *
+
+        FROM transaction
+
+        ORDER BY transaction_datetime DESC
+
+    </select>
+
+</mapper>

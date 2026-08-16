@@ -1,0 +1,17 @@
+DELETE FROM nav_history;
+DELETE FROM dividend;
+DELETE FROM redemption;
+DELETE FROM transaction;
+DELETE FROM sip;
+DELETE FROM investment;
+DELETE FROM holding;
+DELETE FROM portfolio;
+DELETE FROM nominee;
+
+DELETE FROM admin;
+DELETE FROM investor;
+DELETE FROM user;
+
+holding,transaction,payment,mutualfund,investment,sip
+
+https://chatgpt.com/share/6a820aeb-60c4-83ee-b04e-29e2f7487d22

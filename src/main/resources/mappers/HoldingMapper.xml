@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.HoldingMapper">
+
+    <!-- ========================================================= -->
+    <!-- RESULT MAP -->
+    <!-- ========================================================= -->
+
+    <resultMap id="holdingResult"
+               type="com.crimsonlogic.mutualfundinvestmentspringmvc.model.portfolio.Holding">
+
+        <id property="holdingId"
+            column="holding_id"/>
+
+        <result property="unitsOwned"
+                column="units_owned"/>
+
+        <result property="investedAmount"
+                column="invested_amount"/>
+
+        <result property="averageNav"
+                column="average_nav"/>
+
+        <!-- HAS-A MutualFund -->
+        <association property="mutualFund"
+                     javaType="com.crimsonlogic.mutualfundinvestmentspringmvc.model.abstraction.MutualFund"
+                     select="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.MutualFundMapper.getFundById"
+                     column="fund_id"/>
+
+        <!-- HAS-A Portfolio -->
+        <association property="portfolio"
+                     javaType="com.crimsonlogic.mutualfundinvestmentspringmvc.model.portfolio.Portfolio"
+                     select="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.PortfolioMapper.getPortfolioById"
+                     column="portfolio_id"/>
+
+    </resultMap>
+
+    <!-- ========================================================= -->
+    <!-- INSERT -->
+    <!-- ========================================================= -->
+
+    <insert id="insertHolding">
+
+        INSERT INTO holding
+        (
+        holding_id,
+        portfolio_id,
+        fund_id,
+        units_owned,
+        invested_amount,
+        average_nav
+        )
+
+        VALUES
+        (
+        #{holdingId},
+        #{portfolio.portfolioId},
+        #{mutualFund.fundId},
+        #{unitsOwned},
+        #{investedAmount},
+        #{averageNav}
+        )
+
+    </insert>
+
+    <!-- ========================================================= -->
+    <!-- UPDATE -->
+    <!-- ========================================================= -->
+
+    <update id="updateHolding">
+
+        UPDATE holding
+
+        SET
+
+        fund_id=#{mutualFund.fundId},
+
+        units_owned=#{unitsOwned},
+
+        invested_amount=#{investedAmount},
+
+        average_nav=#{averageNav}
+
+        WHERE holding_id=#{holdingId}
+
+    </update>
+
+    <!-- ========================================================= -->
+    <!-- DELETE -->
+    <!-- ========================================================= -->
+
+    <delete id="deleteHolding">
+
+        DELETE
+
+        FROM holding
+
+        WHERE holding_id=#{holdingId}
+
+    </delete>
+
+    <!-- ========================================================= -->
+    <!-- SEARCH BY HOLDING ID -->
+    <!-- ========================================================= -->
+
+    <select id="getHoldingById"
+            resultMap="holdingResult">
+
+        SELECT *
+
+        FROM holding
+
+        WHERE holding_id=#{holdingId}
+
+    </select>
+
+    <!-- ========================================================= -->
+    <!-- SEARCH BY PORTFOLIO -->
+    <!-- ========================================================= -->
+
+    <select id="getHoldingsByPortfolio"
+            resultMap="holdingResult">
+
+        SELECT
+        holding_id,
+        portfolio_id,
+        fund_id,
+        units_owned,
+        invested_amount,
+        average_nav
+        FROM holding
+        WHERE portfolio_id = #{portfolioId}
+
+    </select>
+
+    <!-- ========================================================= -->
+    <!-- SEARCH PARTICULAR FUND IN PORTFOLIO -->
+    <!-- ========================================================= -->
+
+    <select id="getHoldingByPortfolioAndFund"
+            resultMap="holdingResult">
+
+        SELECT *
+
+        FROM holding
+
+        WHERE portfolio_id=#{portfolioId}
+
+        AND fund_id=#{fundId}
+
+    </select>
+
+    <!-- ========================================================= -->
+    <!-- GET ALL HOLDINGS -->
+    <!-- ========================================================= -->
+
+    <select id="getAllHoldings"
+            resultMap="holdingResult">
+
+        SELECT *
+
+        FROM holding
+
+        ORDER BY holding_id
+
+    </select>
+
+</mapper>

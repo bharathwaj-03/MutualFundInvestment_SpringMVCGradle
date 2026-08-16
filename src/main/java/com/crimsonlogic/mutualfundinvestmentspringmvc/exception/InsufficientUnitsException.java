@@ -1,0 +1,7 @@
+package com.crimsonlogic.mutualfundinvestmentspringmvc.exception;
+
+public class InsufficientUnitsException  extends  Exception{
+    public InsufficientUnitsException(String message){
+        super(message);
+    }
+}

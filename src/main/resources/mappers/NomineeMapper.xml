@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.NomineeMapper">
+
+    <resultMap id="nomineeResult"
+               type="com.crimsonlogic.mutualfundinvestmentspringmvc.model.user.Nominee">
+
+        <id property="nomineeId"
+            column="nominee_id"/>
+
+        <result property="name"
+                column="name"/>
+
+        <result property="age"
+                column="age"/>
+
+        <result property="gender"
+                column="gender"/>
+
+        <result property="relationship"
+                column="relationship"/>
+
+    </resultMap>
+
+
+    <insert id="insertNominee">
+
+        INSERT INTO nominee
+        (
+        nominee_id,
+        name,
+        age,
+        gender,
+        relationship
+        )
+
+        VALUES
+        (
+        #{nomineeId},
+        #{name},
+        #{age},
+        #{gender},
+        #{relationship}
+        )
+
+    </insert>
+
+
+    <select id="getNomineeById"
+            resultMap="nomineeResult">
+
+        SELECT *
+        FROM nominee
+        WHERE nominee_id = #{nomineeId}
+
+    </select>
+
+
+    <update id="updateNominee">
+
+        UPDATE nominee
+
+        SET
+        name = #{name},
+        age = #{age},
+        gender = #{gender},
+        relationship = #{relationship}
+
+        WHERE nominee_id = #{nomineeId}
+
+    </update>
+
+
+    <delete id="deleteNominee">
+
+        DELETE FROM nominee
+        WHERE nominee_id = #{nomineeId}
+
+    </delete>
+
+</mapper>

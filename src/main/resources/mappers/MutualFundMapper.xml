@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.MutualFundMapper">
+
+    <!-- ===================================================== -->
+    <!-- BASE RESULT MAP WITH DISCRIMINATOR -->
+    <!-- ===================================================== -->
+
+    <resultMap id="mutualFundResult"
+               type="com.crimsonlogic.mutualfundinvestmentspringmvc.model.abstraction.MutualFund">
+
+        <id property="fundId"
+            column="fund_id"/>
+
+        <result property="fundCode"
+                column="fund_code"/>
+
+        <result property="fundName"
+                column="fund_name"/>
+
+        <result property="fundCategory"
+                column="fund_category"/>
+
+        <result property="fundHouse"
+                column="fund_house"/>
+
+        <result property="riskLevel"
+                column="risk_level"/>
+
+        <result property="nav"
+                column="nav"/>
+
+        <result property="minimumInvestment"
+                column="minimum_investment"/>
+
+        <result property="sipGainPerYear"
+                column="sip_gain_per_year"/>
+
+        <result property="lumpSumGainPerYear"
+                column="lumpsum_gain_per_year"/>
+
+        <discriminator javaType="String"
+                       column="fund_category">
+
+            <case value="Debt Fund"
+                  resultMap="debtFundResult"/>
+
+            <case value="Equity Fund"
+                  resultMap="equityFundResult"/>
+
+            <case value="Hybrid Fund"
+                  resultMap="hybridFundResult"/>
+
+        </discriminator>
+
+    </resultMap>
+
+    <!-- ===================================================== -->
+    <!-- DEBT FUND -->
+    <!-- ===================================================== -->
+
+    <resultMap id="debtFundResult"
+               type="com.crimsonlogic.mutualfundinvestmentspringmvc.model.fund.DebtFund"
+               extends="mutualFundResult"/>
+
+    <!-- ===================================================== -->
+    <!-- EQUITY FUND -->
+    <!-- ===================================================== -->
+
+    <resultMap id="equityFundResult"
+               type="com.crimsonlogic.mutualfundinvestmentspringmvc.model.fund.EquityFund"
+               extends="mutualFundResult"/>
+
+    <!-- ===================================================== -->
+    <!-- HYBRID FUND -->
+    <!-- ===================================================== -->
+
+    <resultMap id="hybridFundResult"
+               type="com.crimsonlogic.mutualfundinvestmentspringmvc.model.fund.HybridFund"
+               extends="mutualFundResult"/>
+
+    <!-- ===================================================== -->
+    <!-- INSERT -->
+    <!-- ===================================================== -->
+
+    <insert id="insertFund">
+
+        INSERT INTO mutualfund
+        (
+        fund_id,
+        fund_code,
+        fund_name,
+        fund_category,
+        fund_house,
+        risk_level,
+        nav,
+        minimum_investment,
+        sip_gain_per_year,
+        lumpsum_gain_per_year
+        )
+
+        VALUES
+        (
+        #{fundId},
+        #{fundCode},
+        #{fundName},
+        #{fundCategory},
+        #{fundHouse},
+        #{riskLevel},
+        #{nav},
+        #{minimumInvestment},
+        #{sipGainPerYear},
+        #{lumpSumGainPerYear}
+        )
+
+    </insert>
+
+    <!-- ===================================================== -->
+    <!-- UPDATE -->
+    <!-- ===================================================== -->
+
+    <update id="updateFund">
+
+        UPDATE mutualfund
+
+        SET
+
+        fund_code=#{fundCode},
+        fund_name=#{fundName},
+        fund_category=#{fundCategory},
+        fund_house=#{fundHouse},
+        risk_level=#{riskLevel},
+        nav=#{nav},
+        minimum_investment=#{minimumInvestment},
+        sip_gain_per_year=#{sipGainPerYear},
+        lumpsum_gain_per_year=#{lumpSumGainPerYear}
+
+        WHERE fund_id=#{fundId}
+
+    </update>
+
+    <!-- ===================================================== -->
+    <!-- DELETE -->
+    <!-- ===================================================== -->
+
+    <delete id="deleteFund">
+
+        DELETE FROM mutualfund
+
+        WHERE fund_id=#{fundId}
+
+    </delete>
+
+    <!-- ===================================================== -->
+    <!-- GET FUND BY ID -->
+    <!-- ===================================================== -->
+
+    <select id="getFundById"
+            resultMap="mutualFundResult">
+
+        SELECT *
+
+        FROM mutualfund
+
+        WHERE fund_id=#{fundId}
+
+    </select>
+
+    <!-- ===================================================== -->
+    <!-- GET FUND BY NAME -->
+    <!-- ===================================================== -->
+
+    <select id="getFundByName"
+            resultMap="mutualFundResult">
+
+        SELECT *
+
+        FROM mutualfund
+
+        WHERE fund_name=#{fundName}
+
+    </select>
+
+    <!-- ===================================================== -->
+    <!-- GET FUNDS BY CATEGORY -->
+    <!-- ===================================================== -->
+
+    <select id="getFundsByCategory"
+            resultMap="mutualFundResult">
+
+        SELECT *
+
+        FROM mutualfund
+
+        WHERE fund_category=#{category}
+
+        ORDER BY fund_name
+
+    </select>
+
+    <!-- ===================================================== -->
+    <!-- GET ALL FUNDS -->
+    <!-- ===================================================== -->
+
+    <select id="getAllFunds"
+            resultMap="mutualFundResult">
+
+        SELECT *
+
+        FROM mutualfund
+
+        ORDER BY
+        fund_category,
+        fund_name
+
+    </select>
+
+</mapper>

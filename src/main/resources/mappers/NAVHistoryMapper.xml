@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.NAVHistoryMapper">
+
+    <resultMap id="navHistoryResult"
+               type="com.crimsonlogic.mutualfundinvestmentspringmvc.model.nav.NAVHistory">
+
+        <id property="historyId"
+            column="history_id"/>
+
+        <result property="oldNav"
+                column="old_nav"/>
+
+        <result property="newNav"
+                column="new_nav"/>
+
+        <result property="changeDate"
+                column="change_date"/>
+
+        <result property="changedBy"
+                column="changed_by"/>
+
+        <association property="mutualFund"
+                     javaType="com.crimsonlogic.mutualfundinvestmentspringmvc.model.abstraction.MutualFund"
+                     select="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.MutualFundMapper.getFundById"
+                     column="fund_id"/>
+
+    </resultMap>
+
+
+    <!-- INSERT -->
+
+    <insert id="insertNAVHistory">
+
+        INSERT INTO nav_history
+        (
+        history_id,
+        fund_id,
+        old_nav,
+        new_nav,
+        change_date,
+        changed_by
+        )
+
+        VALUES
+        (
+        #{historyId},
+        #{mutualFund.fundId},
+        #{oldNav},
+        #{newNav},
+        #{changeDate},
+        #{changedBy}
+        )
+
+    </insert>
+
+
+    <!-- ALL NAV HISTORY -->
+
+    <select id="getAllNAVHistory"
+            resultMap="navHistoryResult">
+
+        SELECT
+        history_id,
+        fund_id,
+        old_nav,
+        new_nav,
+        change_date,
+        changed_by
+
+        FROM nav_history
+
+        ORDER BY change_date DESC
+
+    </select>
+
+
+    <!-- HISTORY FOR PARTICULAR FUND -->
+
+    <select id="getNAVHistoryByFundId"
+            resultMap="navHistoryResult">
+
+        SELECT
+        history_id,
+        fund_id,
+        old_nav,
+        new_nav,
+        change_date,
+        changed_by
+
+        FROM nav_history
+
+        WHERE fund_id = #{fundId}
+
+        ORDER BY change_date DESC
+
+    </select>
+
+</mapper>

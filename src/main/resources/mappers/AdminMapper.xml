@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.AdminMapper">
+
+    <resultMap id="adminResult"
+               type="com.crimsonlogic.mutualfundinvestmentspringmvc.model.user.Admin">
+
+        <id property="userId"
+            column="user_id"/>
+
+        <result property="name"
+                column="name"/>
+
+        <result property="email"
+                column="email"/>
+
+        <result property="phoneNumber"
+                column="phone_number"/>
+
+        <result property="password"
+                column="password"/>
+
+        <result property="userRole"
+                column="user_role"/>
+
+        <result property="adminCode"
+                column="admin_code"/>
+
+        <result property="createdDate"
+                column="created_date"/>
+
+    </resultMap>
+
+    <insert id="insertAdmin">
+
+        INSERT INTO admin
+
+        (
+        user_id,
+        admin_code,
+        created_date
+        )
+
+        VALUES
+
+        (
+        #{userId},
+        #{adminCode},
+        #{createdDate}
+        )
+
+    </insert>
+    <select id="authenticateAdmin"
+            resultMap="adminResult">
+
+        SELECT *
+        FROM user u
+        INNER JOIN admin a
+        ON u.user_id = a.user_id
+        WHERE u.user_id = #{userId}
+        AND u.password = #{password}
+        AND u.user_role = #{role}
+
+    </select>
+
+    <select id="getAdminByUserId"
+            resultMap="adminResult">
+
+        SELECT *
+
+        FROM user u
+
+        INNER JOIN admin a
+
+        ON u.user_id=a.user_id
+
+        WHERE u.user_id=#{userId}
+
+    </select>
+
+</mapper>
