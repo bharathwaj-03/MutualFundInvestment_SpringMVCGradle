@@ -243,6 +243,24 @@
 
          </div>
 
+         <div class="field">
+
+             <label>Account Number</label>
+
+             <input type="text"
+                    name="accountNumber"
+                    value="${investor.accountNumber}"
+                    placeholder="Enter bank account number"
+                    inputmode="numeric"
+                    maxlength="18"
+                    required>
+
+             <div class="field-error">
+                 ${errors.accountNumber}
+             </div>
+
+         </div>
+
         </div>
 
 
@@ -331,6 +349,24 @@
 
             <div class="field-error">
                 ${errors['nominee.relationship']}
+            </div>
+
+        </div>
+
+        <div class="field">
+
+            <label>Nominee Account Number</label>
+
+            <input type="text"
+                   name="nominee.accountNumber"
+                   value="${investor.nominee.accountNumber}"
+                   placeholder="Enter nominee bank account number"
+                   inputmode="numeric"
+                   maxlength="18"
+                   required>
+
+            <div class="field-error">
+                ${errors['nominee.accountNumber']}
             </div>
 
         </div>

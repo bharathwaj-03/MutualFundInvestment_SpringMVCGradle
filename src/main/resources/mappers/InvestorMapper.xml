@@ -39,6 +39,9 @@
         <result property="panNumber"
                 column="pan_number"/>
 
+        <result property="accountNumber"
+                column="account_number"/>
+
         <result property="registrationDate"
                 column="registration_date"/>
 
@@ -76,6 +79,7 @@
         u.user_role,
 
         i.pan_number,
+        i.account_number,
         i.registration_date,
         i.risk_profile,
         i.active,
@@ -106,6 +110,7 @@
         (
         user_id,
         pan_number,
+        account_number,
         registration_date,
         risk_profile,
         active,
@@ -116,6 +121,7 @@
         (
         #{userId},
         #{panNumber},
+        #{accountNumber},
         #{registrationDate},
         #{riskProfile},
         #{active},
@@ -142,6 +148,7 @@
         u.user_role,
 
         i.pan_number,
+        i.account_number,
         i.registration_date,
         i.risk_profile,
         i.active,
@@ -174,6 +181,7 @@
         u.user_role,
 
         i.pan_number,
+        i.account_number,
         i.registration_date,
         i.risk_profile,
         i.active,

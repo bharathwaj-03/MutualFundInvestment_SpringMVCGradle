@@ -9,6 +9,7 @@ import com.crimsonlogic.mutualfundinvestmentspringmvc.model.user.Nominee;
 import com.crimsonlogic.mutualfundinvestmentspringmvc.services.portfolio.I_PortfolioService;
 import com.crimsonlogic.mutualfundinvestmentspringmvc.utilities.DateUtil;
 import com.crimsonlogic.mutualfundinvestmentspringmvc.utilities.IdGeneratorUtil;
+import com.crimsonlogic.mutualfundinvestmentspringmvc.utilities.security.EncryptionUtil;
 import com.crimsonlogic.mutualfundinvestmentspringmvc.utilities.security.PasswordUtil;
 import com.crimsonlogic.mutualfundinvestmentspringmvc.model.interfaces.UserDataValidation;
 import com.crimsonlogic.mutualfundinvestmentspringmvc.exception.UserDataValidationException;
@@ -159,6 +160,36 @@ public class InvestorService implements I_InvestorService {
                 }
 
                 return str.toUpperCase();
+            };
+
+    public UserDataValidation accountNumberValidate =
+            (String str) -> {
+
+                if (str == null ||
+                        str.trim().isEmpty()) {
+
+                    throw new UserDataValidationException(
+                            "Please enter account number."
+                    );
+                }
+
+
+                /*
+                 * Allow 9 to 18 digits.
+                 *
+                 * Adjust if your project has
+                 * a stricter bank-account requirement.
+                 */
+
+                if (!str.matches("\\d{9,18}")) {
+
+                    throw new UserDataValidationException(
+                            "Account number must contain 9 to 18 digits."
+                    );
+                }
+
+
+                return str;
             };
 
 
@@ -368,6 +399,26 @@ public class InvestorService implements I_InvestorService {
             );
         }
 
+        // -----------------------------------------------------
+// Investor Account Number
+// -----------------------------------------------------
+
+        try {
+
+            investor.setAccountNumber(
+                    accountNumberValidate.validate(
+                            investor.getAccountNumber()
+                    )
+            );
+
+        } catch (UserDataValidationException e) {
+
+            errors.put(
+                    "accountNumber",
+                    e.getMessage()
+            );
+        }
+
 
         // =====================================================
         // NOMINEE
@@ -481,6 +532,26 @@ public class InvestorService implements I_InvestorService {
             );
         }
 
+        // -----------------------------------------------------
+// Nominee Account Number
+// -----------------------------------------------------
+
+        try {
+
+            nominee.setAccountNumber(
+                    accountNumberValidate.validate(
+                            nominee.getAccountNumber()
+                    )
+            );
+
+        } catch (UserDataValidationException e) {
+
+            errors.put(
+                    "nominee.accountNumber",
+                    e.getMessage()
+            );
+        }
+
 
         return errors;
     }
@@ -557,6 +628,28 @@ public class InvestorService implements I_InvestorService {
             investor.setPassword(
                     PasswordUtil.hashPassword(
                             investor.getPassword()
+                    )
+            );
+
+            // -------------------------------------------------
+// Encrypt sensitive financial information
+// -------------------------------------------------
+
+            investor.setPanNumber(
+                    EncryptionUtil.encrypt(
+                            investor.getPanNumber()
+                    )
+            );
+
+            investor.setAccountNumber(
+                    EncryptionUtil.encrypt(
+                            investor.getAccountNumber()
+                    )
+            );
+
+            nominee.setAccountNumber(
+                    EncryptionUtil.encrypt(
+                            nominee.getAccountNumber()
                     )
             );
 

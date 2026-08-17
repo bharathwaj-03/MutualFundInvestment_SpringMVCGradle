@@ -23,6 +23,9 @@
         <result property="relationship"
                 column="relationship"/>
 
+        <result property="accountNumber"
+                column="account_number"/>
+
     </resultMap>
 
 
@@ -34,7 +37,8 @@
         name,
         age,
         gender,
-        relationship
+        relationship,
+        account_number
         )
 
         VALUES
@@ -43,7 +47,8 @@
         #{name},
         #{age},
         #{gender},
-        #{relationship}
+        #{relationship},
+        #{accountNumber}
         )
 
     </insert>
@@ -67,7 +72,8 @@
         name = #{name},
         age = #{age},
         gender = #{gender},
-        relationship = #{relationship}
+        relationship = #{relationship},
+        account_number = #{accountNumber}
 
         WHERE nominee_id = #{nomineeId}
 
