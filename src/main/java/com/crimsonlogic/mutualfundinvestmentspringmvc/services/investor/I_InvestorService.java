@@ -20,4 +20,8 @@ public interface I_InvestorService {
             String password
     );
    Investor getInvestorByUserId(  @Param("userId")String userId);
+
+    boolean updateInvestorProfile(
+            Investor investor
+    );
 }

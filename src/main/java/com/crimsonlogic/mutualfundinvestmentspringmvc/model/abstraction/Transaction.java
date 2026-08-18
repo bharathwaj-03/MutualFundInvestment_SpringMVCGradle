@@ -25,6 +25,8 @@ public abstract class Transaction {
     private double amount;
     private LocalDateTime transactionDateTime;
     private Investor investor;
+    private String paymentId;
+
 
     private MutualFund mutualFund;
     private String transactionStatus;
@@ -45,6 +47,14 @@ public abstract class Transaction {
 
     public void setTransactionStatus(String transactionStatus) {
         this.transactionStatus = transactionStatus;
+    }
+
+    public String getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(String paymentId) {
+        this.paymentId = paymentId;
     }
 
     public Transaction() {

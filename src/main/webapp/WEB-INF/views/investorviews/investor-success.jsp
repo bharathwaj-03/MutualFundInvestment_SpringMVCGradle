@@ -172,6 +172,13 @@
 
             </a>
 
+            <a href="${pageContext.request.contextPath}/investor/profile/edit"
+               class="button">
+
+                Edit Profile
+
+            </a>
+
         </div>
 
     </div>

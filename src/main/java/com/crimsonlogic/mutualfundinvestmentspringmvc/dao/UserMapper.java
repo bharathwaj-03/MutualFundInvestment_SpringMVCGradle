@@ -11,4 +11,6 @@ public interface UserMapper {
     User getUserById(
             @Param("userId") String userId);
 
+    void updateUserProfile(User user);
+
 }

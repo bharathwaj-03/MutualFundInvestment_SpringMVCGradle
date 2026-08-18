@@ -82,4 +82,15 @@
 
     </select>
 
+    <update id="updateAdminProfile">
+
+        UPDATE admin
+
+        SET
+        admin_code = #{adminCode}
+
+        WHERE user_id = #{userId}
+
+    </update>
+
 </mapper>

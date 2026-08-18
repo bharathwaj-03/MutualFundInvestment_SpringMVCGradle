@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.crimsonlogic.mutualfundinvestmentspringmvc.dao.PaymentMapper">
+
+
+    <!-- ===================================================== -->
+    <!-- RESULT MAP -->
+    <!-- ===================================================== -->
+
+    <resultMap id="paymentResult"
+               type="com.crimsonlogic.mutualfundinvestmentspringmvc.model.payment.Payment">
+
+        <id property="paymentId"
+            column="payment_id"/>
+
+        <result property="investorId"
+                column="investor_id"/>
+
+        <result property="paymentMethod"
+                column="payment_method"/>
+
+        <result property="upiId"
+                column="upi_id"/>
+
+        <result property="cardNumber"
+                column="card_number"/>
+
+        <result property="cardHolderName"
+                column="card_holder_name"/>
+
+        <result property="bankName"
+                column="bank_name"/>
+
+        <result property="accountNumber"
+                column="account_number"/>
+
+        <result property="paymentStatus"
+                column="payment_status"/>
+
+        <result property="paymentDate"
+                column="payment_date"/>
+
+    </resultMap>
+
+
+    <!-- ===================================================== -->
+    <!-- INSERT PAYMENT -->
+    <!-- ===================================================== -->
+
+    <insert id="insertPayment">
+
+        INSERT INTO payment
+        (
+        payment_id,
+        investor_id,
+        payment_method,
+        upi_id,
+        card_number,
+        card_holder_name,
+        bank_name,
+        account_number,
+        payment_status,
+        payment_date
+        )
+
+        VALUES
+        (
+        #{paymentId},
+        #{investorId},
+        #{paymentMethod},
+        #{upiId},
+        #{cardNumber},
+        #{cardHolderName},
+        #{bankName},
+        #{accountNumber},
+        #{paymentStatus},
+        #{paymentDate}
+        )
+
+    </insert>
+
+
+    <!-- ===================================================== -->
+    <!-- GET PAYMENT -->
+    <!-- ===================================================== -->
+
+    <select id="getPaymentById"
+            resultMap="paymentResult">
+
+        SELECT *
+
+        FROM payment
+
+        WHERE payment_id = #{paymentId}
+
+    </select>
+
+
+</mapper>

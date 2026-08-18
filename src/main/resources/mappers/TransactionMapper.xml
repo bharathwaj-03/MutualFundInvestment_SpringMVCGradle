@@ -19,6 +19,9 @@
         <result property="amount"
                 column="amount"/>
 
+        <result property="paymentId"
+                column="payment_id"/>
+
         <result property="transactionType"
                 column="transaction_type"/>
 
@@ -82,6 +85,7 @@
         transaction_id,
         user_id,
         fund_id,
+        payment_id,
         amount,
         transaction_type,
         transaction_status,
@@ -93,6 +97,7 @@
         #{transactionId},
         #{investor.userId},
         #{mutualFund.fundId},
+        #{paymentId},
         #{amount},
         #{transactionType},
         #{transactionStatus},

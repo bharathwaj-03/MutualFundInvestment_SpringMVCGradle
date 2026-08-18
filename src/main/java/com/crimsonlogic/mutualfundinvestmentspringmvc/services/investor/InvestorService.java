@@ -724,4 +724,169 @@ public class InvestorService implements I_InvestorService {
 
         return investorMapper.getInvestorByUserId(userId);
     }
+
+    @Override
+    public boolean updateInvestorProfile(
+            Investor investor) {
+
+        try {
+
+            if (investor == null ||
+                    investor.getUserId() == null ||
+                    investor.getUserId().trim().isEmpty()) {
+
+                return false;
+            }
+
+
+            /*
+             * IMPORTANT:
+             *
+             * We do NOT call validateInvestor()
+             * here because it also validates password.
+             *
+             * Password is not editable.
+             *
+             * We validate only editable fields.
+             */
+
+
+            // =====================================================
+            // BASIC VALIDATION
+            // =====================================================
+
+            investor.setName(
+                    nameValidate.validate(
+                            investor.getName()
+                    )
+            );
+
+            investor.setEmail(
+                    emailValid.validate(
+                            investor.getEmail()
+                    )
+            );
+
+            investor.setPhoneNumber(
+                    phoneNum.validate(
+                            investor.getPhoneNumber()
+                    )
+            );
+
+            investor.setPanNumber(
+                    panValidate.validate(
+                            investor.getPanNumber()
+                    )
+            );
+
+            investor.setAccountNumber(
+                    accountNumberValidate.validate(
+                            investor.getAccountNumber()
+                    )
+            );
+
+
+            // =====================================================
+            // NOMINEE VALIDATION
+            // =====================================================
+
+            Nominee nominee =
+                    investor.getNominee();
+
+            if (nominee == null) {
+
+                return false;
+            }
+
+
+            nominee.setName(
+                    nomineeNameValidate.validate(
+                            nominee.getName()
+                    )
+            );
+
+            nominee.setGender(
+                    genderValidate.validate(
+                            nominee.getGender()
+                    )
+            );
+
+            nominee.setRelationship(
+                    relationshipValidate.validate(
+                            nominee.getRelationship()
+                    )
+            );
+
+            nominee.setAccountNumber(
+                    accountNumberValidate.validate(
+                            nominee.getAccountNumber()
+                    )
+            );
+
+
+            if (nominee.getAge() <= 0) {
+
+                return false;
+            }
+
+
+            // =====================================================
+            // ENCRYPT SENSITIVE DATA
+            // =====================================================
+
+            investor.setPanNumber(
+                    EncryptionUtil.encrypt(
+                            investor.getPanNumber()
+                    )
+            );
+
+            investor.setAccountNumber(
+                    EncryptionUtil.encrypt(
+                            investor.getAccountNumber()
+                    )
+            );
+
+            nominee.setAccountNumber(
+                    EncryptionUtil.encrypt(
+                            nominee.getAccountNumber()
+                    )
+            );
+
+
+            // =====================================================
+            // UPDATE USER TABLE
+            // =====================================================
+
+            userMapper.updateUserProfile(
+                    investor
+            );
+
+
+            // =====================================================
+            // UPDATE INVESTOR TABLE
+            // =====================================================
+
+            investorMapper.updateInvestorProfile(
+                    investor
+            );
+
+
+            // =====================================================
+            // UPDATE NOMINEE TABLE
+            // =====================================================
+
+            nomineeMapper.updateNominee(
+                    nominee
+            );
+
+
+            return true;
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            return false;
+        }
+    }
 }

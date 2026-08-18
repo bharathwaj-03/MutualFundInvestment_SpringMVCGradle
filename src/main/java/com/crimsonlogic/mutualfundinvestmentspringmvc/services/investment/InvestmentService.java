@@ -5,6 +5,7 @@ import com.crimsonlogic.mutualfundinvestmentspringmvc.model.abstraction.MutualFu
 import com.crimsonlogic.mutualfundinvestmentspringmvc.model.abstraction.Transaction;
 import com.crimsonlogic.mutualfundinvestmentspringmvc.model.financeactivity.Investment;
 import com.crimsonlogic.mutualfundinvestmentspringmvc.model.interfaces.Payable;
+import com.crimsonlogic.mutualfundinvestmentspringmvc.model.payment.Payment;
 import com.crimsonlogic.mutualfundinvestmentspringmvc.model.portfolio.Holding;
 import com.crimsonlogic.mutualfundinvestmentspringmvc.model.portfolio.Portfolio;
 import com.crimsonlogic.mutualfundinvestmentspringmvc.model.transaction.BuyTransaction;
@@ -253,8 +254,6 @@ public class InvestmentService
                 annualGain * investmentYears;
 
 
-        // 8. Payment
-
         boolean paymentSuccessful =
                 paymentService.processPayment(
                         paymentMethod,
@@ -267,6 +266,18 @@ public class InvestmentService
                     "Payment failed. Investment was not created."
             );
         }
+
+
+// =====================================================
+// SAVE PAYMENT DETAILS
+// =====================================================
+
+        Payment payment =
+                paymentService.savePayment(
+                        investorId,
+                        paymentMethod,
+                        amount
+                );
 
 
         // 9. Create investment
@@ -324,6 +335,10 @@ public class InvestmentService
         transaction.setInvestor(investor);
 
         transaction.setMutualFund(mutualFund);
+
+        transaction.setPaymentId(
+                payment.getPaymentId()
+        );
 
         transaction.setAmount(amount);
 

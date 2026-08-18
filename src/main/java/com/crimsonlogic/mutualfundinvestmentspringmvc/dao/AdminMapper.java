@@ -19,5 +19,7 @@ public interface AdminMapper {
             String userId);
 
     List<Admin> getAllAdmins();
-
+    void updateAdminProfile(
+            Admin admin
+    );
 }

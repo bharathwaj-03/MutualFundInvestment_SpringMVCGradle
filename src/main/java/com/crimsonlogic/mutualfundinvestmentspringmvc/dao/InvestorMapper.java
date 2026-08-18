@@ -34,4 +34,8 @@ public interface InvestorMapper {
             @Param("userId") String userId,
             @Param("riskProfile") String riskProfile);
 
+    void updateInvestorProfile(
+            Investor investor
+    );
+
 }

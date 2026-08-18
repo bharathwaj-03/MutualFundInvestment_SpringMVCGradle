@@ -205,7 +205,34 @@
              Update NAV
          </a>
 
+
+
         </div>
+
+           <div class="card">
+
+                    <h2>
+                        Update NAV
+                    </h2>
+
+                    <p>
+                        Update the NAV of an existing
+                        mutual fund.
+                    </p>
+
+            <a href="${pageContext.request.contextPath}/admin/profile/edit"
+                               class="button">
+
+                                Edit Profile
+
+                            </a>
+
+
+                </div>
+
+
+
+
 
 
     </div>

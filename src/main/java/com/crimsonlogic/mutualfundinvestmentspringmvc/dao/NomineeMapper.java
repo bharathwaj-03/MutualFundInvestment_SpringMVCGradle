@@ -16,4 +16,6 @@ public interface NomineeMapper {
     void deleteNominee(
             @Param("nomineeId")
             String nomineeId);
+
+
 }

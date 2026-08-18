@@ -260,4 +260,64 @@ public class AdminService implements I_AdminService {
 
         return true;
     }
+    @Override
+    public Admin getAdminByUserId(
+            String userId) {
+
+        return adminMapper.getAdminByUserId(
+                userId
+        );
+    }
+
+    @Override
+    public boolean updateAdminProfile(Admin admin) {
+
+        try {
+
+            if (admin == null ||
+                    admin.getUserId() == null ||
+                    admin.getUserId().trim().isEmpty()) {
+
+                return false;
+            }
+
+            if (admin.getName() == null ||
+                    admin.getName().trim().isEmpty()) {
+
+                return false;
+            }
+
+            if (admin.getEmail() == null ||
+                    admin.getEmail().trim().isEmpty()) {
+
+                return false;
+            }
+
+            if (admin.getPhoneNumber() == null ||
+                    !admin.getPhoneNumber().matches("^[6-9][0-9]{9}$")) {
+
+                return false;
+            }
+
+            if (admin.getAdminCode() == null ||
+                    admin.getAdminCode().trim().isEmpty()) {
+
+                return false;
+            }
+
+            // Update name, email and phone number
+            userMapper.updateUserProfile(admin);
+
+            // Update admin-specific data
+            adminMapper.updateAdminProfile(admin);
+
+            return true;
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            return false;
+        }
+    }
 }

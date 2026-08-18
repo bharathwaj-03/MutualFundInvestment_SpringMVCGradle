@@ -60,4 +60,10 @@ public class IdGeneratorUtil {
     public static String generateNomineeId() {
         return "NOM" + getRandomNumber();
     }
+
+    public static String generatePaymentId() {
+
+        return "PAY"
+                +  getRandomNumber();
+    }
 }

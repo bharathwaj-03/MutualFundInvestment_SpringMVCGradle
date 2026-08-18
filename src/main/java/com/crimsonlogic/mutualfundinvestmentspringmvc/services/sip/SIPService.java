@@ -4,6 +4,7 @@ import com.crimsonlogic.mutualfundinvestmentspringmvc.dao.SIPMapper;
 import com.crimsonlogic.mutualfundinvestmentspringmvc.model.abstraction.MutualFund;
 import com.crimsonlogic.mutualfundinvestmentspringmvc.model.financeactivity.SIP;
 import com.crimsonlogic.mutualfundinvestmentspringmvc.model.interfaces.Payable;
+import com.crimsonlogic.mutualfundinvestmentspringmvc.model.payment.Payment;
 import com.crimsonlogic.mutualfundinvestmentspringmvc.model.portfolio.Holding;
 import com.crimsonlogic.mutualfundinvestmentspringmvc.model.portfolio.Portfolio;
 import com.crimsonlogic.mutualfundinvestmentspringmvc.model.transaction.SIPTransaction;
@@ -224,10 +225,30 @@ public class SIPService implements I_SIPService {
                     "Investor not found."
             );
         }
-        paymentService.processPayment(
-                paymentMethod,
-                monthlyAmount
-        );
+        boolean paymentSuccessful =
+                paymentService.processPayment(
+                        paymentMethod,
+                        monthlyAmount
+                );
+
+        if (!paymentSuccessful) {
+
+            throw new IllegalArgumentException(
+                    "Payment failed. SIP was not created."
+            );
+        }
+
+
+// =====================================================
+// SAVE PAYMENT DETAILS
+// =====================================================
+
+        Payment payment =
+                paymentService.savePayment(
+                        investorId,
+                        paymentMethod,
+                        monthlyAmount
+                );
 
 
         // =====================================================
@@ -368,6 +389,8 @@ public class SIPService implements I_SIPService {
         );
 
 
+
+
         sip.setActivityDate(
                 DateUtil.getCurrentDate()
         );
@@ -441,6 +464,9 @@ public class SIPService implements I_SIPService {
 
         transaction.setTransactionStatus(
                 "SUCCESS"
+        );
+        transaction.setPaymentId(
+                payment.getPaymentId()
         );
 
         transaction.setTransactionDateTime(

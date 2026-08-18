@@ -228,5 +228,18 @@
 
     </update>
 
+    <update id="updateInvestorProfile">
+
+        UPDATE investor
+
+        SET
+        pan_number = #{panNumber},
+        account_number = #{accountNumber},
+        risk_profile = #{riskProfile}
+
+        WHERE user_id = #{userId}
+
+    </update>
+
 
 </mapper>
