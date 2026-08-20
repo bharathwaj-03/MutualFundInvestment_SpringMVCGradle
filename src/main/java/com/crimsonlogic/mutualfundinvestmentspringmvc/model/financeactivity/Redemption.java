@@ -10,9 +10,17 @@ public class Redemption extends FinancialActivity {
     private String investorId;
     private String fundId;
     private String redemptionId;
-
     private double unitsRedeemed;
+    private double brokerageCharges;
 
+
+    public double getBrokerageCharges() {
+        return brokerageCharges;
+    }
+
+    public void setBrokerageCharges(double brokerageCharges) {
+        this.brokerageCharges = brokerageCharges;
+    }
 
     public Redemption() {
     }

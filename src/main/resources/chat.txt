@@ -15,3 +15,40 @@ DELETE FROM user;
 holding,transaction,payment,mutualfund,investment,sip
 
 https://chatgpt.com/share/6a820aeb-60c4-83ee-b04e-29e2f7487d22
+
+
+CREATE TABLE payment (
+
+    payment_id VARCHAR(30) PRIMARY KEY,
+
+    investor_id VARCHAR(30) NOT NULL,
+
+    payment_method VARCHAR(20) NOT NULL,
+
+    upi_id VARCHAR(255),
+
+    card_number VARCHAR(255),
+
+    card_holder_name VARCHAR(100),
+
+    bank_name VARCHAR(100),
+
+    account_number VARCHAR(255),
+
+    payment_status VARCHAR(20) NOT NULL,
+
+    payment_date DATETIME NOT NULL,
+
+    CONSTRAINT fk_payment_investor
+        FOREIGN KEY (investor_id)
+        REFERENCES investor(user_id)
+
+);
+
+ALTER TABLE transaction
+ADD COLUMN payment_id VARCHAR(30);
+
+ALTER TABLE transaction
+ADD CONSTRAINT fk_transaction_payment
+FOREIGN KEY (payment_id)
+REFERENCES payment(payment_id);
