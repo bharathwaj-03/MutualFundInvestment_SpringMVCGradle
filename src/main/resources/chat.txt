@@ -52,3 +52,5 @@ ALTER TABLE transaction
 ADD CONSTRAINT fk_transaction_payment
 FOREIGN KEY (payment_id)
 REFERENCES payment(payment_id);
+
+https://chatgpt.com/share/6a820aeb-60c4-83ee-b04e-29e2f7487d22
